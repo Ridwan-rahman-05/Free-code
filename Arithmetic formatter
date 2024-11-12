@@ -1,0 +1,57 @@
+def arithmetic_arranger(problems, show_answers=False):
+    if len(problems) > 5:
+        return "Error: Too many problems."
+
+    top_row = ""
+    bottom_row = ""
+    lines = ""
+    answers_row = ""
+
+    for index, problem in enumerate(problems):
+        # Pisahkan masalah menjadi dua operand dan operator
+        parts = problem.split()
+        if len(parts) != 3:
+            return "Error: Invalid format."
+        
+        operand1, operator, operand2 = parts
+        
+        # Validasi operator
+        if operator not in ["+", "-"]:
+            return "Error: Operator must be '+' or '-'."
+        
+        # Validasi angka
+        if not (operand1.isdigit() and operand2.isdigit()):
+            return "Error: Numbers must only contain digits."
+        
+        # Validasi panjang angka
+        if len(operand1) > 4 or len(operand2) > 4:
+            return "Error: Numbers cannot be more than four digits."
+        
+        # Hitung lebar yang dibutuhkan untuk penataan
+        width = max(len(operand1), len(operand2)) + 2
+        top = operand1.rjust(width)
+        bottom = operator + " " + operand2.rjust(width - 2)
+        line = "-" * width
+
+        # Tambahkan baris jawaban jika show_answers = True
+        if show_answers:
+            if operator == "+":
+                answer = str(int(operand1) + int(operand2)).rjust(width)
+            else:
+                answer = str(int(operand1) - int(operand2)).rjust(width)
+            answers_row += answer + ("    " if index < len(problems) - 1 else "")
+        
+        # Gabungkan masing-masing bagian dengan pemisah
+        top_row += top + ("    " if index < len(problems) - 1 else "")
+        bottom_row += bottom + ("    " if index < len(problems) - 1 else "")
+        lines += line + ("    " if index < len(problems) - 1 else "")
+    
+    arranged_problems = top_row + "\n" + bottom_row + "\n" + lines
+    if show_answers:
+        arranged_problems += "\n" + answers_row
+
+    return arranged_problems
+
+# Contoh pemanggilan fungsi
+print(f'\n{arithmetic_arranger(["32 + 698", "3801 - 2", "45 + 43", "123 + 49"])}')
+print(f'\n{arithmetic_arranger(["32 + 8", "1 - 3801", "9999 + 9999", "523 - 49"], True)}')
